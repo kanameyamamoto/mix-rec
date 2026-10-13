@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>MixRec</string>
+    <key>CFBundleDisplayName</key>
+    <string>MixRec</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.kaname.mixrec</string>
+    <key>CFBundleExecutable</key>
+    <string>MixRec</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.2.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.2</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>自分の声を録音するためにマイクを使います。</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>録音中の会話や講義を文字起こしするために音声認識を使います。</string>
+    <key>NSAudioCaptureUsageDescription</key>
+    <string>Macの内部音声（動画や会議の音）を録音するために使います。</string>
+</dict>
+</plist>
