@@ -54,3 +54,4 @@ BlackHole などの仮想オーディオや「複数出力装置」は不要で�
 | `Sources/RecorderModel.swift` | 録音・文字起こし・録音一覧の状態管理 |
 | `Sources/MixRecApp.swift` | メニューバーの画面 |
 | `Sources/CoreAudioHelper.swift` | 音声装置の一覧や情報の取得 |
+| `Resources/AppIcon.png` / `.svg` | アプリアイコン（ビルド時に .icns に変換） |
