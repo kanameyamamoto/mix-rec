@@ -208,7 +208,7 @@ struct TrackBottom: ViewModifier {
     }
 }
 
-/// メニューバーのアイコン。録音中は「録音マーク＋時間」を毎回同じ幅の画像として描く。
+/// メニューバーのアイコン。録音中は「波形＋時間」を毎回同じ幅の画像として描く。
 /// （文字のままだと数字ごとに幅が変わり、アイコンの真下に出る画面が毎秒左右に動いてしまうため）
 struct MenuBarLabel: View {
     @ObservedObject var model: RecorderModel
@@ -217,16 +217,16 @@ struct MenuBarLabel: View {
         if model.isRecording {
             Image(nsImage: Self.render(time: model.elapsedText))
         } else {
-            // 待機中はカセットテープ。録音アプリだとひと目で分かるように
-            Image(systemName: "recordingtape")
+            // 待機中は波形（丸で囲まない）
+            Image(systemName: "waveform")
         }
     }
 
     @MainActor
     static func render(time: String) -> NSImage {
         let content = HStack(spacing: 4) {
-            // 録音中は丸（録音マーク）＋時間。マークは動かさず、時間だけ進む
-            Image(systemName: "record.circle.fill")
+            // 録音中も同じ波形を左に置き、右に時間。波形は動かさず、時間だけ進む
+            Image(systemName: "waveform")
                 .font(.system(size: 13, weight: .medium))
             Text(time)
                 .font(.system(size: 13, weight: .medium).monospacedDigit())
