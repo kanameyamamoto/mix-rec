@@ -48,6 +48,8 @@ pkill -x MixRec 2>/dev/null || true
 rm -rf "$HOME/Applications/MixRec.app"
 cp -R "$APP" "$HOME/Applications/MixRec.app"
 touch "$HOME/Applications/MixRec.app"   # Finderにアイコンを読み直させる
+# 作業用のアプリは消す（残すとアプリ一覧に MixRec が2つ出てしまう）
+rm -rf "$APP" "$ICONSET"
 
 echo "できました。メニューバーに波形のアイコンが出ます。"
 open "$HOME/Applications/MixRec.app"

@@ -8,13 +8,13 @@
 <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#bgA)" filter="url(#sh)"/>
 <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#gloss)"/>
 
-<rect x="140.0" y="444.4" width="56" height="135.2" rx="28.0" fill="url(#barA)"/>
-<rect x="226.0" y="387.2" width="56" height="249.6" rx="28.0" fill="url(#barA)"/>
-<rect x="312.0" y="319.6" width="56" height="384.8" rx="28.0" fill="url(#barA)"/>
-<rect x="398.0" y="376.8" width="56" height="270.4" rx="28.0" fill="url(#barA)"/>
-<rect x="484.0" y="252.0" width="56" height="520.0" rx="28.0" fill="url(#barA)"/>
-<rect x="570.0" y="350.8" width="56" height="322.4" rx="28.0" fill="url(#barA)"/>
-<rect x="656.0" y="293.6" width="56" height="436.8" rx="28.0" fill="url(#barA)"/>
-<rect x="742.0" y="397.6" width="56" height="228.8" rx="28.0" fill="url(#barA)"/>
-<rect x="828.0" y="439.2" width="56" height="145.6" rx="28.0" fill="url(#barA)"/>
+<rect x="227.0" y="460.0" width="42" height="104.0" rx="21.0" fill="url(#barA)"/>
+<rect x="293.0" y="416.0" width="42" height="192.0" rx="21.0" fill="url(#barA)"/>
+<rect x="359.0" y="364.0" width="42" height="296.0" rx="21.0" fill="url(#barA)"/>
+<rect x="425.0" y="408.0" width="42" height="208.0" rx="21.0" fill="url(#barA)"/>
+<rect x="491.0" y="312.0" width="42" height="400.0" rx="21.0" fill="url(#barA)"/>
+<rect x="557.0" y="388.0" width="42" height="248.0" rx="21.0" fill="url(#barA)"/>
+<rect x="623.0" y="344.0" width="42" height="336.0" rx="21.0" fill="url(#barA)"/>
+<rect x="689.0" y="424.0" width="42" height="176.0" rx="21.0" fill="url(#barA)"/>
+<rect x="755.0" y="456.0" width="42" height="112.0" rx="21.0" fill="url(#barA)"/>
 </svg>
