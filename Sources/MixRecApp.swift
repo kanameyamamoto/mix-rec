@@ -341,14 +341,14 @@ struct FooterView: View {
     @EnvironmentObject var model: RecorderModel
 
     private var statusIcon: (name: String, color: Color) {
-        if model.isRecording { return ("record.circle.fill", .red) }
-        if model.isSaving || model.isStarting { return ("hourglass", .secondary) }
-        if model.status.contains("失敗") || model.status.contains("できません") || model.status.contains("許可されていません") {
+        let text = model.displayStatus
+        if text.contains("失敗") || text.contains("できません") || text.contains("できませんでした")
+            || text.contains("許可されていません") || text.contains("ONにしてください") {
             return ("exclamationmark.triangle.fill", .orange)
         }
-        if model.status.hasPrefix("保存しました") || model.status.contains("コピーしました") {
-            return ("checkmark.circle.fill", .green)
-        }
+        if model.notice != nil { return ("checkmark.circle.fill", .green) }
+        if model.isRecording { return ("record.circle.fill", .red) }
+        if model.isSaving || model.isStarting { return ("hourglass", .secondary) }
         return ("circle.fill", .green)
     }
 
@@ -361,10 +361,10 @@ struct FooterView: View {
                     .font(.system(size: statusIcon.name == "circle.fill" ? 6 : 10))
                     .foregroundStyle(statusIcon.color)
                     .frame(width: 12)
-                Text(model.status)
+                Text(model.displayStatus)
                     .lineLimit(1)
                     .truncationMode(.tail)
-                    .help(model.status)
+                    .help(model.displayStatus)
             }
             .font(.caption)
             .foregroundStyle(.secondary)

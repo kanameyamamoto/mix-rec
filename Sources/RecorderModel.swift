@@ -10,6 +10,29 @@ final class RecorderModel: ObservableObject {
     @Published var isStarting = false
     @Published var elapsed: TimeInterval = 0
     @Published var status = "準備OK"
+    /// 一時的なお知らせ（「コピーしました」など）。数秒で消え、元の状態表示に戻る
+    @Published var notice: String?
+    private var noticeToken = 0
+
+    /// 画面に出す状態。録音中などは状態を優先し、お知らせは一時的に上書きするだけ
+    var displayStatus: String {
+        if let notice { return notice }
+        if isStarting { return "準備中…" }
+        if isRecording { return "録音中…" }
+        if isSaving { return "保存中…" }
+        return status
+    }
+
+    /// お知らせを数秒だけ出す
+    func flash(_ message: String, seconds: Double = 2.5) {
+        noticeToken += 1
+        let token = noticeToken
+        notice = message
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) { [weak self] in
+            guard let self, self.noticeToken == token else { return }
+            self.notice = nil
+        }
+    }
     @Published var lastSavedURL: URL?
     @Published var micDevices: [AudioDevice] = []
     @Published var transcript: [TranscriptLine] = []
@@ -132,12 +155,12 @@ final class RecorderModel: ObservableObject {
             var useTranscription = transcribe
             if useTranscription {
                 let ok = await LiveTranscriber.requestAuthorization()
-                if !ok {
-                    useTranscription = false
-                    status = "音声認識が許可されていないため、文字起こしなしで録音します"
-                }
+                if !ok { useTranscription = false }
             }
             await beginCapture(transcription: useTranscription)
+            if transcribe && !useTranscription && isRecording {
+                flash("音声認識が許可されていないため、文字起こしなしで録音しています", seconds: 5)
+            }
         }
     }
 
@@ -192,7 +215,8 @@ final class RecorderModel: ObservableObject {
 
     private func beginCapture(transcription: Bool) async {
         isStarting = true
-        status = "準備中…"
+        status = "準備OK"
+        notice = nil
         defer { isStarting = false }
         do {
             let dir = FileManager.default.temporaryDirectory
@@ -255,7 +279,7 @@ final class RecorderModel: ObservableObject {
             isRecording = true
             startDate = recordingStart
             elapsed = 0
-            status = "録音中…"
+            status = "準備OK"
             timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
                 Task { @MainActor in
                     guard let self, let start = self.startDate else { return }
@@ -279,7 +303,7 @@ final class RecorderModel: ObservableObject {
         timer = nil
         isRecording = false
         isSaving = true
-        status = "保存中…"
+        notice = nil
 
         guard let dir = tempDir else { isSaving = false; return }
         Task { await finishRecording(dir: dir) }
@@ -328,15 +352,17 @@ final class RecorderModel: ObservableObject {
             try await Mixer.mix(sources: sources, to: output)
             try? FileManager.default.removeItem(at: dir)
             lastSavedURL = output
-            status = "保存しました：\(output.lastPathComponent)"
+            status = "準備OK"
+            var saved = "保存しました"
 
             if !transcript.isEmpty {
                 let textURL = output.deletingPathExtension().appendingPathExtension("txt")
                 try transcriptText().write(to: textURL, atomically: true, encoding: .utf8)
                 lastTranscriptURL = textURL
                 refreshHistory()
-                status += "（文字起こしも保存）"
+                saved += "（文字起こしも保存）"
             }
+            flash(saved, seconds: 4)
             Log.write("保存OK: \(output.path)")
         } catch {
             // まとめに失敗しても元の録音は残す
@@ -396,13 +422,13 @@ final class RecorderModel: ObservableObject {
     /// 過去の録音の文字起こし全文をコピーする
     func copyRecording(_ item: RecordingItem) {
         guard let text = try? String(contentsOf: item.url, encoding: .utf8) else {
-            status = "読み込めませんでした：\(item.url.lastPathComponent)"
+            flash("読み込めませんでした：\(item.url.lastPathComponent)", seconds: 4)
             return
         }
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(text, forType: .string)
         copiedItemID = item.id
-        status = "「\(item.title)」の文字起こしをコピーしました"
+        flash("「\(item.aiTitle ?? item.title)」の文字起こしをコピーしました")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             if self?.copiedItemID == item.id { self?.copiedItemID = nil }
         }
@@ -417,7 +443,7 @@ final class RecorderModel: ObservableObject {
     func copyTranscript() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(transcriptText(), forType: .string)
-        status = "文字起こしをコピーしました"
+        flash("文字起こしをコピーしました")
     }
 
     func chooseFolder() {
